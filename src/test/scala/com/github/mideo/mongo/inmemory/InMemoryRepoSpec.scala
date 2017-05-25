@@ -1,5 +1,6 @@
-package com.github.mideo.mongo
+package com.github.mideo.mongo.inmemory
 
+import com.github.mideo.mongo.{Car, CarRepo, MongoKitSpec}
 import reactivemongo.api.commands.WriteResult
 
 import scala.concurrent.ExecutionContext.Implicits.global

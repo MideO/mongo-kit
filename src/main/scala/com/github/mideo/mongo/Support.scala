@@ -30,3 +30,4 @@ trait OpUpdate[T] {
 trait OpDelete[T] {
   protected def delete(fieldValue:String): Future[WriteResult]
 }
+

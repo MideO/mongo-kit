@@ -1,5 +1,6 @@
 package com.github.mideo.mongo
 
+import com.github.mideo.mongo.inmemory.{Crud => InMemCrud}
 import org.bson.types.ObjectId
 import org.scalatest.{AsyncFeatureSpec, GivenWhenThen}
 
@@ -10,7 +11,7 @@ class MongoKitSpec
 }
 
 class CarRepo
-  extends Crud[Car]
+  extends InMemCrud[Car]
 
 object Car {
   def apply(colour: String): Car = {

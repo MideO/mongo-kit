@@ -1,5 +1,6 @@
-package com.github.mideo.mongo
+package com.github.mideo.mongo.inmemory
 
+import com.github.mideo.mongo._
 import reactivemongo.api.commands.{DefaultWriteResult, WriteError, WriteResult}
 
 import scala.collection.mutable.ArrayBuffer
