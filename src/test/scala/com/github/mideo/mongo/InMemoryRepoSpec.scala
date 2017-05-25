@@ -16,7 +16,7 @@ class InMemoryRepoSpec extends MongoKitSpec {
       Given("An InMemory Car Repository")
       val carRepo: CarRepo = new CarRepo()
 
-      When("I create as car")
+      When("I create a car")
       val result: Future[WriteResult] = carRepo.create(Car("Red"))
 
 
@@ -32,7 +32,7 @@ class InMemoryRepoSpec extends MongoKitSpec {
       val car = Car("Red")
 
 
-      When("I create as car")
+      When("I create a car")
       carRepo.create(car)
 
       And("I search the car repository")
@@ -43,6 +43,27 @@ class InMemoryRepoSpec extends MongoKitSpec {
       result map {
         it => assert(it.size == 1)
               assert(it.head.colour == "Red")
+      }
+    }
+
+    scenario("Read All"){
+      Given("An InMemory Car Repository")
+      val carRepo: CarRepo = new CarRepo()
+      
+      When("I create cars")
+      carRepo.create(Car("Red"))
+      carRepo.create(Car("Orange"))
+      carRepo.create(Car("Green"))
+      carRepo.create(Car("Blue"))
+      
+      And("I search for cars")
+      val result = carRepo.read
+
+
+      Then("I expect the car to be returned")
+      result map {
+        it => assert(it.size == 4)
+          
       }
     }
 
@@ -94,7 +115,7 @@ class InMemoryRepoSpec extends MongoKitSpec {
       Given("An InMemory Car Repository")
       val carRepo: CarRepo = new CarRepo()
 
-      When("I create as car")
+      When("I create a car")
       carRepo.create(Car("Red"))
 
       And("I delete the car")
