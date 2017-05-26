@@ -14,20 +14,20 @@ trait CollectionItem {
   }
 }
 
-trait OpCreate[T] {
-  protected def create(t: T): Future[WriteResult]
+trait OpCreate[A] {
+  protected def create(a: A): Future[WriteResult]
 }
 
-trait OpRead[T] {
-  protected def read: Future[List[T]]
-  protected def read(fieldValue: String): Future[List[T]]
+trait OpRead[A] {
+  protected def read: Future[List[A]]
+  protected def read(fieldValue: String): Future[List[A]]
 }
 
-trait OpUpdate[T] {
-  protected def update(fieldValue: String, t: T): Future[WriteResult]
+trait OpUpdate[A] {
+  protected def update(fieldValue: String, a: A): Future[WriteResult]
 }
 
-trait OpDelete[T] {
+trait OpDelete[A] {
   protected def delete(fieldValue:String): Future[WriteResult]
 }
 

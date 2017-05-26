@@ -10,55 +10,54 @@ import reactivemongo.play.json.collection.JSONCollection
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import reactivemongo.play.json._
-
-trait ReactiveRepo[T] {
-  implicit val formatter:OFormat[T]
+trait ReactiveRepo[A] {
+  implicit val formatter:OFormat[A]
   val reactiveMongo: ReactiveMongoApi
   val repoName:String
   def collection:Future[JSONCollection] = reactiveMongo.database map {_.collection[JSONCollection](repoName)}
 }
 
-trait Create[T<: CollectionItem] extends ReactiveRepo[T] {
-  def create(t: T): Future[WriteResult] = {
+trait Create[A<: CollectionItem] extends ReactiveRepo[A] {
+  def create(a: A): Future[WriteResult] = {
     collection flatMap {
-      _.insert(t)
+      _.insert(a)
     }
   }
 }
 
-trait Read[T<: CollectionItem] extends ReactiveRepo[T] {
-  def read(field:String, value: String): Future[List[T]] = {
+trait Read[A<: CollectionItem] extends ReactiveRepo[A] {
+  def read(field:String, value: String): Future[List[A]] = {
 
     collection.flatMap {
       _.find(Json.obj( field -> value)).
-        cursor[T](ReadPreference.primary).
-        collect[List](-1, Cursor.FailOnError[List[T]]())
+        cursor[A](ReadPreference.primary).
+        collect[List](-1, Cursor.FailOnError[List[A]]())
     }
   }
 
-  def readAll:Future[List[T]] = {
+  def readAll:Future[List[A]] = {
     collection.flatMap {
       _.find(Json.obj()).
-        cursor[T](ReadPreference.primary).
-        collect[List](-1, Cursor.FailOnError[List[T]]())
+        cursor[A](ReadPreference.primary).
+        collect[List](-1, Cursor.FailOnError[List[A]]())
     }
   }
 }
 
-trait Update[T<: CollectionItem] extends ReactiveRepo[T] {
-  def update(value:String, t:T): Future[WriteResult] = {
-    collection.flatMap { _.update(Json.obj(t.identifierValue -> value), t)}
+trait Update[A<: CollectionItem] extends ReactiveRepo[A] {
+  def update(value:String, a:A): Future[WriteResult] = {
+    collection.flatMap { _.update(Json.obj(a.identifierValue -> value), a)}
   }
 }
 
-trait Delete[T<: CollectionItem] extends ReactiveRepo[T] {
+trait Delete[A<: CollectionItem] extends ReactiveRepo[A] {
   def delete(field:String, value: String): Future[WriteResult] = {
     collection.flatMap{ _.remove(Json.obj(field -> value))}
   }
 }
 
-trait Crud[T<: CollectionItem]
-  extends Create[T]
-    with Read[T]
-    with Update[T]
-    with Delete[T]
+trait Crud[A<: CollectionItem]
+  extends Create[A]
+    with Read[A]
+    with Update[A]
+    with Delete[A]
