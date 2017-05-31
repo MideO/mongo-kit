@@ -10,6 +10,7 @@ import reactivemongo.play.json.collection.JSONCollection
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import reactivemongo.play.json._
+
 trait ReactiveRepo[A] {
   implicit val formatter:OFormat[A]
   val reactiveMongo: ReactiveMongoApi

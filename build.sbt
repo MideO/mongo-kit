@@ -6,6 +6,7 @@ version := "0.0.1-SNAPSHOT"
 
 organization := "com.github.mideo"
 
+scalaVersion := "2.11.7"
 
 lazy val `mongo-kit` = (project in file("."))
   .settings(
