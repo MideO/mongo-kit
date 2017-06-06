@@ -15,7 +15,7 @@ trait ReactiveRepo[A] {
   implicit val formatter:OFormat[A]
   val reactiveMongo: ReactiveMongoApi
   val repoName:String
-  def collection:Future[JSONCollection] = reactiveMongo.database map {_.collection[JSONCollection](repoName)}
+  val collection:Future[JSONCollection] //= reactiveMongo.database map {_.collection[JSONCollection](repoName)}
 }
 
 trait Create[A<: CollectionItem] extends ReactiveRepo[A] {

@@ -37,5 +37,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" % "play-json_2.11" % "2.6.0-RC1",
   "org.reactivemongo" % "play2-reactivemongo_2.11" % "0.12.3",
   "org.scalatest" %% "scalatest" % "3.0.1" % Test,
+  "org.mockito" % "mockito-core" % "2.8.9" % Test,
   "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % Test
 )

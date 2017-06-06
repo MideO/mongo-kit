@@ -2,22 +2,14 @@ package com.github.mideo.mongo
 
 import com.github.mideo.mongo.inmemory.{Crud => InMemCrud}
 import com.github.mideo.mongo.reactive.{Crud => ReactiveCrud}
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.{AsyncFeatureSpec, GivenWhenThen}
-import play.api.libs.json.{Json, OFormat}
+import org.scalatest.mockito.MockitoSugar
+import org.scalatest.{AsyncFeatureSpec, GivenWhenThen, OneInstancePerTest}
+import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoApi
-import reactivemongo.api.DefaultDB
+import reactivemongo.play.json.collection.JSONCollection
+
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-
-
-class MongoKitSpec
-  extends AsyncFeatureSpec
-    with GivenWhenThen {
-
-}
-
-class CarRepo extends InMemCrud[Car]
+import scala.concurrent._
 
 object Car {
   def apply(colour: String): Car = new Car(colour)
@@ -26,14 +18,20 @@ object Car {
 
 case class Car(colour: String, override val identifier: String = "colour") extends CollectionItem
 
+class CarRepo extends InMemCrud[Car]
 
-class ReactiveCarRepo
-  extends ReactiveCrud[Car]
-    with MockFactory {
-  override val reactiveMongo: ReactiveMongoApi = stub[ReactiveMongoApi]
-  override implicit val formatter: OFormat[Car] = Json.format[Car]
-  override val repoName: String = "car"
+class MongoKitSpec
+  extends AsyncFeatureSpec
+    with GivenWhenThen
+    with OneInstancePerTest with MockitoSugar {
+  val mockReactiveMongoApi: ReactiveMongoApi = mock[ReactiveMongoApi]
+  val mockCollection:JSONCollection =   mock[JSONCollection]
 
-  val defaultDB: DefaultDB = stub[DefaultDB]
-  (reactiveMongo.database _).when().returns(Future(defaultDB))
+object ReactiveCarRepo
+    extends ReactiveCrud[Car] with MockitoSugar{
+    implicit val formatter: OFormat[Car] = Json.format[Car]
+    override val reactiveMongo: ReactiveMongoApi = mockReactiveMongoApi
+    override val repoName: String = "car"
+    override val collection: Future[JSONCollection] = Future{mockCollection}
+  }
 }
