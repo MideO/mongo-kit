@@ -12,11 +12,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 
 object Car {
-  def apply(colour: String): Car = new Car(colour)
+  implicit val formatter: OFormat[Car] = Json.format[Car]
 }
 
-
-case class Car(colour: String, override val identifier: String = "colour") extends CollectionItem
+case class Car(colour: String) extends CollectionItem("colour")
 
 class CarRepo extends InMemCrud[Car]
 
@@ -29,7 +28,7 @@ class MongoKitSpec
 
 object ReactiveCarRepo
     extends ReactiveCrud[Car] with MockitoSugar{
-    implicit val formatter: OFormat[Car] = Json.format[Car]
+    implicit val formatter: OFormat[Car] = Car.formatter
     override val reactiveMongo: ReactiveMongoApi = mockReactiveMongoApi
     override val repoName: String = "car"
     override val collection: Future[JSONCollection] = Future{mockCollection}

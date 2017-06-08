@@ -47,7 +47,7 @@ class ReactiveRepoSpec extends MongoKitSpec {
 
     scenario("Read All") {
       When("I read the car Repo")
-      val result = ReactiveCarRepo.readAll
+      val result = ReactiveCarRepo.read
 
 
       Then("I expect a result")

@@ -1,6 +1,6 @@
 package com.github.mideo.mongo.reactive
 
-import com.github.mideo.mongo.CollectionItem
+import com.github.mideo.mongo._
 import play.api.libs.json.{Json, OFormat}
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.{Cursor, ReadPreference}
@@ -11,14 +11,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import reactivemongo.play.json._
 
-trait ReactiveRepo[A] {
+trait ReactiveRepo[A]  {
   implicit val formatter:OFormat[A]
   val reactiveMongo: ReactiveMongoApi
   val repoName:String
-  val collection:Future[JSONCollection] //= reactiveMongo.database map {_.collection[JSONCollection](repoName)}
+  val collection:Future[JSONCollection]
 }
 
-trait Create[A<: CollectionItem] extends ReactiveRepo[A] {
+trait Create[A<: CollectionItem] extends ReactiveRepo[A] with OpCreate[A]{
   def create(a: A): Future[WriteResult] = {
     collection flatMap {
       _.insert(a)
@@ -26,7 +26,7 @@ trait Create[A<: CollectionItem] extends ReactiveRepo[A] {
   }
 }
 
-trait Read[A<: CollectionItem] extends ReactiveRepo[A] {
+trait Read[A<: CollectionItem] extends ReactiveRepo[A] with OpRead[A]{
   def read(field:String, value: String): Future[List[A]] = {
 
     collection.flatMap {
@@ -36,7 +36,7 @@ trait Read[A<: CollectionItem] extends ReactiveRepo[A] {
     }
   }
 
-  def readAll:Future[List[A]] = {
+  def read:Future[List[A]] = {
     collection.flatMap {
       _.find(Json.obj()).
         cursor[A](ReadPreference.primary).
@@ -45,13 +45,13 @@ trait Read[A<: CollectionItem] extends ReactiveRepo[A] {
   }
 }
 
-trait Update[A<: CollectionItem] extends ReactiveRepo[A] {
+trait Update[A<: CollectionItem] extends ReactiveRepo[A] with OpUpdate[A]{
   def update(value:String, a:A): Future[WriteResult] = {
     collection.flatMap { _.update(Json.obj(a.identifierValue -> value), a)}
   }
 }
 
-trait Delete[A<: CollectionItem] extends ReactiveRepo[A] {
+trait Delete[A<: CollectionItem] extends ReactiveRepo[A] with OpDelete[A]{
   def delete(field:String, value: String): Future[WriteResult] = {
     collection.flatMap{ _.remove(Json.obj(field -> value))}
   }

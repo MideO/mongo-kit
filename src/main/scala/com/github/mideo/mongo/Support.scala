@@ -4,8 +4,9 @@ import reactivemongo.api.commands.WriteResult
 
 import scala.concurrent._
 
-trait CollectionItem {
-  val identifier:String = "_id"
+abstract class CollectionItem(id:String="_id") {
+
+  def identifier:String = id
 
   def identifierValue:String = {
     val f = this.getClass.getDeclaredField(identifier)
@@ -20,7 +21,7 @@ trait OpCreate[A] {
 
 trait OpRead[A] {
   protected def read: Future[List[A]]
-  protected def read(fieldValue: String): Future[List[A]]
+  protected def read(field:String, value: String): Future[List[A]]
 }
 
 trait OpUpdate[A] {
@@ -28,6 +29,6 @@ trait OpUpdate[A] {
 }
 
 trait OpDelete[A] {
-  protected def delete(fieldValue:String): Future[WriteResult]
+  protected def delete(field:String, value: String): Future[WriteResult]
 }
 

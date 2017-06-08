@@ -30,10 +30,10 @@ trait Read[A <: CollectionItem]
     InMemoryCollection.toList
   }
 
-  override def read(fieldValue: String): Future[List[A]] = {
+  override def read(field:String, value: String): Future[List[A]] = {
     Future {
       (InMemoryCollection filter { (c: CollectionItem) => {
-        c.identifierValue.equals(fieldValue)
+        c.identifier.equals(field) && c.identifierValue.equals(value)
       }
       }).toList
     }
@@ -65,8 +65,10 @@ trait Update[A <: CollectionItem]
 trait Delete[A <: CollectionItem]
   extends InMemoryRepo[A]
     with OpDelete[A] {
-  override def delete(fieldValue: String): Future[WriteResult] = {
-    val temp = InMemoryCollection filter { (c: CollectionItem) => c.identifierValue.equals(fieldValue) }
+  override def delete(field:String, value: String): Future[WriteResult] = {
+    val temp = InMemoryCollection filter { (c: CollectionItem) =>
+          c.identifier.equals(field) && c.identifierValue.equals(value)
+    }
 
     if (temp.isEmpty) {
       Future {
