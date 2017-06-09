@@ -6,9 +6,9 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{AsyncFeatureSpec, GivenWhenThen, OneInstancePerTest}
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoApi
-import reactivemongo.play.json.collection.JSONCollection
+import reactivemongo.api.collections.bson.BSONCollection
+import reactivemongo.bson.{BSONDocumentReader, BSONDocumentWriter, Macros}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 
 object Car {
@@ -23,13 +23,17 @@ class MongoKitSpec
     with GivenWhenThen
     with OneInstancePerTest with MockitoSugar {
   val mockReactiveMongoApi: ReactiveMongoApi = mock[ReactiveMongoApi]
-  val mockCollection:JSONCollection =   mock[JSONCollection]
+  val mockCollection:BSONCollection =   mock[BSONCollection]
 
 object ReactiveCarRepo
     extends ReactiveCrud[Car] with MockitoSugar{
-    implicit val formatter: OFormat[Car] = Car.formatter
+    //implicit val formatter: OFormat[Car] = Car.formatter
     override val reactiveMongo: ReactiveMongoApi = mockReactiveMongoApi
     override val repoName: String = "car"
-    override val collection: Future[JSONCollection] = Future{mockCollection}
-  }
+    override def collection: Future[BSONCollection] = Future{mockCollection}
+
+  override implicit def Writer: BSONDocumentWriter[Car] = Macros.writer[Car]
+
+  override implicit def Reader: BSONDocumentReader[Car] = Macros.reader[Car]
+}
 }

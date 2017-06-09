@@ -3,19 +3,23 @@ package com.github.mideo.mongo.reactive
 import com.github.mideo.mongo._
 import play.api.libs.json.{Json, OFormat}
 import play.modules.reactivemongo.ReactiveMongoApi
+import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.api.{Cursor, ReadPreference}
 import reactivemongo.api.commands.WriteResult
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import reactivemongo.play.json._
-import reactivemongo.play.json.collection.JSONCollection
+import reactivemongo.bson.{BSONDocumentReader, BSONDocumentWriter, Macros}
 
 trait ReactiveRepo[A] extends FieldValueGetter[A] {
-  implicit val formatter: OFormat[A]
+
+  implicit def Writer: BSONDocumentWriter[A]
+  implicit def Reader: BSONDocumentReader[A]
+
   val reactiveMongo: ReactiveMongoApi
   val repoName: String
-  val collection: Future[JSONCollection]
+  def collection: Future[BSONCollection]
 
 }
 

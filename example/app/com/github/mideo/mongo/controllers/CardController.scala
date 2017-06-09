@@ -24,7 +24,7 @@ class CardController @Inject()(cardRepo: CardRepo) extends Controller {
             if (!result.ok) {
               PreconditionFailed(s"Could not create ${card.colour}")
             } else {
-              Created(s"Created 1 car")
+              Created(s"Created 1 card")
             }
         }
       case JsError(errors) =>

@@ -1,11 +1,11 @@
 package com.github.mideo.mongo.db.impl
 
-import com.github.mideo.mongo.db.{CardRepo, Card}
+import com.github.mideo.mongo.db.{Card, CardRepo}
 import com.github.mideo.mongo.reactive.Crud
 import com.google.inject.Inject
-import play.api.libs.json.OFormat
 import play.modules.reactivemongo.ReactiveMongoApi
-import reactivemongo.play.json.collection.JSONCollection
+import reactivemongo.api.collections.bson.BSONCollection
+import reactivemongo.bson.{BSONDocumentReader, BSONDocumentWriter, Macros}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -13,8 +13,12 @@ import scala.concurrent.Future
 class ReactiveCardRepo @Inject()(val reactiveMongoApi: ReactiveMongoApi)
   extends CardRepo
     with Crud[Card] {
-  override implicit val formatter: OFormat[Card] = Card.formatter
+
   override val reactiveMongo: ReactiveMongoApi = reactiveMongoApi
   override val repoName: String = "card"
-  override val collection: Future[JSONCollection] = reactiveMongoApi.database map {_.collection[JSONCollection](repoName) }
+  override def collection: Future[BSONCollection] = reactiveMongo.database map {_.collection[BSONCollection](repoName) }
+
+  override implicit def Writer: BSONDocumentWriter[Card] = Macros.writer[Card]
+
+  override implicit def Reader: BSONDocumentReader[Card] = Macros.reader[Card]
 }
