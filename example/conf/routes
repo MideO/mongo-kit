@@ -1,6 +1,6 @@
 # Routes
-GET    /                          com.github.mideo.mongo.controllers.CarController.findAll
+GET    /                          com.github.mideo.mongo.controllers.CardController.findAll
 
-POST   /                           com.github.mideo.mongo.controllers.CarController.createFromJson
+POST   /                           com.github.mideo.mongo.controllers.CardController.createFromJson
 
     

@@ -3,26 +3,26 @@ package com.github.mideo.mongo.controllers
 import javax.inject._
 
 import com.github.mideo.mongo.Errors
-import com.github.mideo.mongo.db.{Car, CarRepo}
+import com.github.mideo.mongo.db.{Card, CardRepo}
 import play.api.Logger
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.mvc._
 import reactivemongo.api.commands.WriteResult
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 
 @Singleton
-class CarController @Inject()(carRepo: CarRepo) extends Controller {
+class CardController @Inject()(cardRepo: CardRepo) extends Controller {
 
   def createFromJson: Action[JsValue] = Action.async(parse.json) {
-    request => Json.fromJson[Car](request.body) match {
-      case JsSuccess(car, _) =>
-        carRepo.create(car).map {
+    request => Json.fromJson[Card](request.body) match {
+      case JsSuccess(card, _) =>
+        Logger.info(s"$card")
+        cardRepo.create(card).map {
           result: WriteResult =>
             Logger.info(s"$result")
             if (!result.ok) {
-              PreconditionFailed(s"Could not create ${car.colour}")
+              PreconditionFailed(s"Could not create ${card.colour}")
             } else {
               Created(s"Created 1 car")
             }
@@ -34,8 +34,8 @@ class CarController @Inject()(carRepo: CarRepo) extends Controller {
   }
 
   def findAll: Action[AnyContent] = Action.async {
-    carRepo.read.map {
-      (cars: List[Car]) => Ok(Json.toJson(cars))
+    cardRepo.read.map {
+      (cards: List[Card]) => Ok(Json.toJson(cards))
     }
   }
 }

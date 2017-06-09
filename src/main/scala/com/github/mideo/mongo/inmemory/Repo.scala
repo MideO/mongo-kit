@@ -7,7 +7,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 
-trait InMemoryRepo[A] {
+trait InMemoryRepo[A] extends FieldValueGetter[A]{
   protected val InMemoryCollection: ArrayBuffer[A] = ArrayBuffer[A]()
 }
 
@@ -23,7 +23,7 @@ trait Create[A]
   }
 }
 
-trait Read[A <: CollectionItem]
+trait Read[A]
   extends InMemoryRepo[A]
     with OpRead[A] {
   override def read: Future[List[A]] = Future {
@@ -32,8 +32,8 @@ trait Read[A <: CollectionItem]
 
   override def read(field:String, value: String): Future[List[A]] = {
     Future {
-      (InMemoryCollection filter { (c: CollectionItem) => {
-        c.identifier.equals(field) && c.identifierValue.equals(value)
+      (InMemoryCollection filter { (a: A) => {
+        getFieldValue(field, a).equals(value)
       }
       }).toList
     }
@@ -41,12 +41,12 @@ trait Read[A <: CollectionItem]
 }
 
 
-trait Update[A <: CollectionItem]
+trait Update[A ]
   extends InMemoryRepo[A]
     with OpUpdate[A] {
 
-  override def update(fieldValue: String, a: A): Future[WriteResult] = {
-    val temp = InMemoryCollection filter { (c: CollectionItem) => !c.identifierValue.equals(fieldValue) }
+  override def update(field:String, value:String, a: A): Future[WriteResult] = {
+    val temp = InMemoryCollection filter { (a: A) => !getFieldValue(field, a).equals(value) }
 
     if (InMemoryCollection.size > temp.size) {
       InMemoryCollection += a
@@ -62,12 +62,12 @@ trait Update[A <: CollectionItem]
 }
 
 
-trait Delete[A <: CollectionItem]
+trait Delete[A ]
   extends InMemoryRepo[A]
     with OpDelete[A] {
   override def delete(field:String, value: String): Future[WriteResult] = {
-    val temp = InMemoryCollection filter { (c: CollectionItem) =>
-          c.identifier.equals(field) && c.identifierValue.equals(value)
+    val temp = InMemoryCollection filter { (a: A) =>
+          getFieldValue(field, a).equals(value)
     }
 
     if (temp.isEmpty) {
@@ -85,7 +85,7 @@ trait Delete[A <: CollectionItem]
 }
 
 
-trait Crud[A <: CollectionItem]
+trait Crud[A ]
   extends Create[A]
     with Read[A]
     with Update[A]

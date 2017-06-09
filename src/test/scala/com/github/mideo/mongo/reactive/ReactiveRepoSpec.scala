@@ -35,9 +35,7 @@ class ReactiveRepoSpec extends MongoKitSpec {
 
     scenario("Read") {
       When("I read the car Repo")
-      val car = Car("Pink")
-      val fil = Json.obj(car.identifier -> car.identifierValue)
-      val result: Future[List[Car]] = ReactiveCarRepo.read(car.identifier, car.identifierValue)
+      val result: Future[List[Car]] = ReactiveCarRepo.read("colour", "red")
 
 
       Then("I expect a result")
@@ -59,8 +57,8 @@ class ReactiveRepoSpec extends MongoKitSpec {
     scenario("Update") {
       When("I update a car in Repo")
       val car = Car("Pink")
-      val fil = Json.obj(car.identifier -> "red")
-      val result: Future[WriteResult] = ReactiveCarRepo.update("red", car)
+      val fil = Json.obj("colour"-> "red")
+      val result: Future[WriteResult] = ReactiveCarRepo.update("colour","red", car)
 
 
       Then("I expect reactivemongo update to be invoked")
@@ -72,8 +70,8 @@ class ReactiveRepoSpec extends MongoKitSpec {
     scenario("Delete") {
       When("I delete a car in Repo")
       val car = Car("Pink")
-      val fil = Json.obj(car.identifier -> car.identifierValue)
-      val result: Future[WriteResult] = ReactiveCarRepo.delete(car.identifier, car.identifierValue)
+      val fil = Json.obj("colour"-> "red")
+      val result: Future[WriteResult] = ReactiveCarRepo.delete("colour", "red")
 
       Then("I expect a result")
       Mockito.verify(mockCollection).remove(fil)(Json.writes[JsObject], GlobalEC)

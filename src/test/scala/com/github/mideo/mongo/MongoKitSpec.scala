@@ -14,8 +14,7 @@ import scala.concurrent._
 object Car {
   implicit val formatter: OFormat[Car] = Json.format[Car]
 }
-
-case class Car(colour: String) extends CollectionItem("colour")
+case class Car(colour: String)
 
 class CarRepo extends InMemCrud[Car]
 

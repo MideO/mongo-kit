@@ -37,7 +37,7 @@ class InMemoryRepoSpec extends MongoKitSpec {
       carRepo.create(car)
 
       And("I search the car repository")
-      val result = carRepo.read(car.identifier,  "Red")
+      val result = carRepo.read("colour",  "Red")
 
 
       Then("I expect the car to be returned")
@@ -77,14 +77,14 @@ class InMemoryRepoSpec extends MongoKitSpec {
       carRepo.create(car)
 
       When("I update the car colour")
-      val result: Future[WriteResult] = carRepo.update(car.colour, Car("Blue"))
+      val result: Future[WriteResult] = carRepo.update("colour", car.colour, Car("Blue"))
 
       Then("I expect the Car to be stored successfully")
       result map { it => assert(it.ok) }
 
 
       And("I search the car repository")
-      val result1 = carRepo.read(car.identifier, "Blue")
+      val result1 = carRepo.read("colour", "Blue")
 
 
       Then("I expect the car to be returned")
@@ -101,7 +101,7 @@ class InMemoryRepoSpec extends MongoKitSpec {
       val carRepo: CarRepo = new CarRepo()
 
       When("I update a non existent car")
-      val result: Future[WriteResult] = carRepo.update("Green", Car("Blue"))
+      val result: Future[WriteResult] = carRepo.update("colour","Green", Car("Blue"))
 
       Then("I expect a failed result")
       result map {
@@ -121,7 +121,7 @@ class InMemoryRepoSpec extends MongoKitSpec {
       carRepo.create(Car("Red"))
 
       And("I delete the car")
-      val result = carRepo.delete(car.identifier, "Red")
+      val result = carRepo.delete("colour", "Red")
 
 
       Then("I expect the car to be deleted successfully")
@@ -135,7 +135,7 @@ class InMemoryRepoSpec extends MongoKitSpec {
 
       When("I delete a non existent car")
       val car  = Car("Red")
-      val result = carRepo.delete(car.identifier, "Red")
+      val result = carRepo.delete("colour", "Red")
 
 
       Then("I expect a failed result")
