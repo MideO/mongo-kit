@@ -16,7 +16,7 @@ class ReactiveCardRepo @Inject()(val reactiveMongoApi: ReactiveMongoApi)
 
   override val reactiveMongo: ReactiveMongoApi = reactiveMongoApi
   override val repoName: String = "card"
-  override def collection: Future[BSONCollection] = reactiveMongo.database map {_.collection[BSONCollection](repoName) }
+  override val collection: Future[BSONCollection] = reactiveMongo.database map {_.collection[BSONCollection](repoName) }
 
   override implicit def Writer: BSONDocumentWriter[Card] = Macros.writer[Card]
 

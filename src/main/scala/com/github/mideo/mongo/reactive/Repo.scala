@@ -1,7 +1,7 @@
 package com.github.mideo.mongo.reactive
 
 import com.github.mideo.mongo._
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.api.{Cursor, ReadPreference}
@@ -10,7 +10,7 @@ import reactivemongo.api.commands.WriteResult
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import reactivemongo.play.json._
-import reactivemongo.bson.{BSONDocumentReader, BSONDocumentWriter, Macros}
+import reactivemongo.bson.{BSONDocumentReader, BSONDocumentWriter}
 
 trait ReactiveRepo[A] extends FieldValueGetter[A] {
 
@@ -19,7 +19,7 @@ trait ReactiveRepo[A] extends FieldValueGetter[A] {
 
   val reactiveMongo: ReactiveMongoApi
   val repoName: String
-  def collection: Future[BSONCollection]
+  val collection: Future[BSONCollection]
 
 }
 

@@ -2,8 +2,9 @@ package com.github.mideo.mongo.reactive
 
 import com.github.mideo.mongo.{Car, MongoKitSpec}
 import org.mockito.Mockito
-import play.api.libs.json._
-import reactivemongo.api.BSONSerializationPack
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
+import play.api.libs.json.Json
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.api.commands.{DefaultWriteResult, WriteResult}
 
@@ -18,67 +19,109 @@ class ReactiveRepoSpec extends MongoKitSpec {
     info("So that I can run my  application with on a real database")
     val GlobalEC = scala.concurrent.ExecutionContext.Implicits.global
 
-//    scenario("Create") {
-//      When("I create a car in Repo")
-//      val car = Car("Pink")
-//      Mockito.when(mockCollection.insert(car)(ReactiveCarRepo.Writer, GlobalEC)).
-//        thenReturn(Future {DefaultWriteResult(ok = true, 1, List(), None, None, None)})
-//      val result: Future[WriteResult] = ReactiveCarRepo.create(car)
-//
-//
-//      Then("I expect result to be ok")
-//      result map {
-//        it =>
-//          assert(it.ok)
-//          assert(it.n == 1)
-//
-//      }
-//    }
+    scenario("Create") {
+      When("I create a car in Repo")
+      val car = Car("Pink")
+
+      val repo:ReactiveCarRepo = new ReactiveCarRepo {
+        override val collection: Future[BSONCollection] = mock[Future[BSONCollection]](new Answer[Future[DefaultWriteResult]] {
+          override def answer(invocation: InvocationOnMock): Future[DefaultWriteResult] = Future (DefaultWriteResult(ok = true, 1, List(), None, None, None))
+        })
+      }
+
+      val result: Future[WriteResult] = repo.create(car)
+
+
+      Then("I expect a result")
+      assert(result != null)
+
+      result map {
+        it =>
+          assert(it.ok)
+          assert(it.n == 1)
+
+      }
+    }
 
     scenario("Read") {
       When("I read the car Repo")
-      val result: Future[List[Car]] = ReactiveCarRepo.read("colour", "red")
+
+
+      val repo:ReactiveCarRepo = new ReactiveCarRepo {
+        override val collection: Future[BSONCollection] = mock[Future[BSONCollection]](new Answer[Future[List[Car]]] {
+          override def answer(invocation: InvocationOnMock): Future[List[Car]] = Future (List(Car("red")))
+        })
+      }
+      val result: Future[List[Car]] = repo.read("colour", "red")
 
 
       Then("I expect a result")
       //Mockito.verify(mockCollection).find(fil)(Json.writes[JsObject])
-      assert(result != null)
+      result map {
+        it => assert(it.size == 1)
+      }
     }
 
     scenario("Read All") {
       When("I read the car Repo")
-      val result = ReactiveCarRepo.read
+      val repo:ReactiveCarRepo = new ReactiveCarRepo {
+        override val collection: Future[BSONCollection] = mock[Future[BSONCollection]](new Answer[Future[List[Car]]] {
+          override def answer(invocation: InvocationOnMock): Future[List[Car]] = Future (List(Car("red")))
+        })
+      }
+      val result: Future[List[Car]] = repo.read
 
 
       Then("I expect a result")
-      assert(result != null)
+      //Mockito.verify(mockCollection).find(fil)(Json.writes[JsObject])
+      result map {
+        it => assert(it.size == 1)
+      }
     }
 
 
+    scenario("Update") {
+      When("I update a car in Repo")
+      val car = Car("Pink")
+      val repo:ReactiveCarRepo = new ReactiveCarRepo {
+        override val collection: Future[BSONCollection] = mock[Future[BSONCollection]](new Answer[Future[DefaultWriteResult]] {
+          override def answer(invocation: InvocationOnMock): Future[DefaultWriteResult] = Future (DefaultWriteResult(ok = true, 1, List(), None, None, None))
+        })
+      }
 
-//    scenario("Update") {
-//      When("I update a car in Repo")
-//      val car = Car("Pink")
-//      val fil = Json.obj("colour"-> "red")
-//      val result: Future[WriteResult] = ReactiveCarRepo.update("colour","red", car)
-//
-//
-//      Then("I expect reactivemongo update to be invoked")
-//      Mockito.verify(mockCollection).update(fil, car)(BSONSerializationPack.IdentityWriter, ReactiveCarRepo.Writer, GlobalEC)
-//      assert(result != null)
-//
-//    }
-//
-//    scenario("Delete") {
-//      When("I delete a car in Repo")
-//      val car = Car("Pink")
-//      val fil = Json.obj("colour"-> "red")
-//      val result: Future[WriteResult] = ReactiveCarRepo.delete("colour", "red")
-//
-//      Then("I expect a result")
-//      Mockito.verify(mockCollection).remove(fil)(BSONCollection, GlobalEC)
-//      assert(result != null)
-//    }
+      val result: Future[WriteResult] = repo.update("colour", "red", car)
+
+
+      Then("I expect reactivemongo update to be invoked")
+      result map {
+        it =>
+          assert(it.ok)
+          assert(it.n == 1)
+
+      }
+
+    }
+
+    scenario("Delete") {
+      When("I delete a car in Repo")
+      val car = Car("Pink")
+      val repo:ReactiveCarRepo = new ReactiveCarRepo {
+        override val collection: Future[BSONCollection] = mock[Future[BSONCollection]](new Answer[Future[DefaultWriteResult]] {
+          override def answer(invocation: InvocationOnMock): Future[DefaultWriteResult] = Future (DefaultWriteResult(ok = true, 1, List(), None, None, None))
+        })
+      }
+
+      val result: Future[WriteResult] = repo.delete("colour", "red")
+
+      Then("I expect a result")
+
+      result map {
+        it =>
+          assert(it.ok)
+          assert(it.n == 1)
+
+      }
+    }
   }
 
 }
