@@ -48,7 +48,6 @@ reactiveCardRepo.create(Card("green"))
 
 
 //Test with in-memory db
-
 class InMemoryCardRepo extends InMemoryCrud[Card] 
 
 val inMemoryCardRepo: InMemoryCardRepo = new InMemoryCardRepo()
