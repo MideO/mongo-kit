@@ -30,8 +30,8 @@ object Card { implicit val formatter: OFormat[Card] = Json.format[Card] }
 
 case class Card(colour: String)
 
-
-class ReactiveCardRepo (reactiveMongoApi: ReactiveMongoApi) #Create a document in mongo  
+//Create a document in mongo
+class ReactiveCardRepo (reactiveMongoApi: ReactiveMongoApi)   
     extend ReactiveCrud[Card] {
   
   override val reactiveMongo: ReactiveMongoApi = reactiveMongoApi
@@ -46,7 +46,9 @@ class ReactiveCardRepo (reactiveMongoApi: ReactiveMongoApi) #Create a document i
 val reactiveCardRepo: ReactiveCardRepo = new ReactiveCardRepo(new DefaultReactiveMongoApi(.....))
 reactiveCardRepo.create(Card("green"))
 
-#Test with in-memory db
+
+//Test with in-memory db
+
 class InMemoryCardRepo extends InMemoryCrud[Card] 
 
 val inMemoryCardRepo: InMemoryCardRepo = new InMemoryCardRepo()
