@@ -1,10 +1,8 @@
 package com.github.mideo.mongo.reactive
 
 import com.github.mideo.mongo.{Car, MongoKitSpec}
-import org.mockito.Mockito
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
-import play.api.libs.json.Json
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.api.commands.{DefaultWriteResult, WriteResult}
 
@@ -17,7 +15,7 @@ class ReactiveRepoSpec extends MongoKitSpec {
     info("As a developer")
     info("I want to connect mongo db")
     info("So that I can run my  application with on a real database")
-    val GlobalEC = scala.concurrent.ExecutionContext.Implicits.global
+
 
     scenario("Create") {
       When("I create a car in Repo")
@@ -56,7 +54,6 @@ class ReactiveRepoSpec extends MongoKitSpec {
 
 
       Then("I expect a result")
-      //Mockito.verify(mockCollection).find(fil)(Json.writes[JsObject])
       result map {
         it => assert(it.size == 1)
       }
@@ -73,7 +70,6 @@ class ReactiveRepoSpec extends MongoKitSpec {
 
 
       Then("I expect a result")
-      //Mockito.verify(mockCollection).find(fil)(Json.writes[JsObject])
       result map {
         it => assert(it.size == 1)
       }
@@ -104,7 +100,6 @@ class ReactiveRepoSpec extends MongoKitSpec {
 
     scenario("Delete") {
       When("I delete a car in Repo")
-      val car = Car("Pink")
       val repo:ReactiveCarRepo = new ReactiveCarRepo {
         override val collection: Future[BSONCollection] = mock[Future[BSONCollection]](new Answer[Future[DefaultWriteResult]] {
           override def answer(invocation: InvocationOnMock): Future[DefaultWriteResult] = Future (DefaultWriteResult(ok = true, 1, List(), None, None, None))

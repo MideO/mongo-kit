@@ -1,4 +1,4 @@
-name := "example"
+name := "example-playframework"
 
 version := "1.0"
 
