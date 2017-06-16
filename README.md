@@ -10,7 +10,6 @@ Scala 2.11.7
 Simple API abstraction to quick integration of mongodb CRUD operations.
 
 ### Usage
-Full example in
  * example-playframework
   
 ```scala
@@ -30,7 +29,7 @@ object Card { implicit val formatter: OFormat[Card] = Json.format[Card] }
 case class Card(colour: String)
 
 //Create a document in mongo
-class ReactiveCardRepo (reactiveMongoApi: ReactiveMongoApi)   
+class ReactiveCardRepo @Inject()(reactiveMongoApi: ReactiveMongoApi)   
     extend ReactiveCrud[Card] {
   
   override val reactiveMongo: ReactiveMongoApi = reactiveMongoApi
@@ -42,7 +41,7 @@ class ReactiveCardRepo (reactiveMongoApi: ReactiveMongoApi)
   override implicit def Reader: BSONDocumentReader[Card] = Macros.reader[Card]
 }
 
-val reactiveCardRepo: ReactiveCardRepo = new ReactiveCardRepo(new DefaultReactiveMongoApi(.....))
+val reactiveCardRepo: ReactiveCardRepo = new ReactiveCardRepo(reactiveMongo)
 reactiveCardRepo.create(Card("green"))
 
 
@@ -77,7 +76,7 @@ trait CardRepo {
 }
 
 class ReactiveCardRepo extends CardRepo with Crud[Card]{
-  private val config: Config = AppConfig.config
+  private val config: Config = ConfigFactory.load()
   private val reactiveMongoApiWrapper = new ReactiveMongoApiWrapper(config, config.getString("mongo.uri"), config.getString("mongo.db"))
 
   override implicit def Writer: BSONDocumentWriter[Card] = Macros.writer[Card]
