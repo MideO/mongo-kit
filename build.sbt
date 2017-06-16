@@ -34,6 +34,7 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
   "org.mongodb" % "bson" % "3.4.2",
+  "com.typesafe.play" % "play_2.11" % "2.6.0-RC1",
   "com.typesafe.play" % "play-json_2.11" % "2.6.0-RC1",
   "org.reactivemongo" % "play2-reactivemongo_2.11" % "0.12.3",
   "org.scalatest" %% "scalatest" % "3.0.1" % Test,

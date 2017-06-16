@@ -5,7 +5,7 @@
 ```sh
 $ cd example_scalatra
 $ ./sbt
-> container:start
+> jetty:start
 > browse
 ```
 

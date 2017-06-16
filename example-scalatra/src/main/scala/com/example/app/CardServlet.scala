@@ -1,10 +1,21 @@
 package com.example.app
 
-import com.example.app.models._
+import akka.actor.ActorSystem
+import com.example.app.db.{Card, CardRepo}
+import org.scalatra._
+import play.api.libs.json.Json
 
-class CardServlet extends ExamplescalatraStack {
+import scala.concurrent.ExecutionContext
+
+class CardServlet (cardRepo:CardRepo)  extends ScalatraServlet with FutureSupport {
+  implicit val system = ActorSystem("MySystem")
+  override protected implicit def executor: ExecutionContext = system.dispatcher
 
   get("/") {
-    Message("Hello, world!")
+    cardRepo.read.map {
+      (cards: List[Card]) => Json.toJson(cards)
+    }
   }
+
+
 }

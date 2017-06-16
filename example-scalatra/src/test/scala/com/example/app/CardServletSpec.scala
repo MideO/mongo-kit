@@ -1,16 +1,24 @@
 package com.example.app
 
-import org.scalatra.test.scalatest._
+import com.example.app.db.{Card, CardRepo}
+import com.github.mideo.mongo.inmemory.Crud
+import org.scalatra.test.specs2._
 
-// For more on ScalaTest, see http://www.scalatest.org/quick_start
-class CardServletSpec extends ScalatraSpec {
-  addServlet(classOf[CardServlet], "/*")
 
-  describe("GET / on CardServlet") {
-    it("should return status 200") {
+class InMemoryCarCrud extends CardRepo with Crud[Card]
+
+class CardServletSpec extends MutableScalatraSpec {
+
+  val cardServlet: CardServlet = new CardServlet(new InMemoryCarCrud)
+  addServlet(cardServlet, "/*")
+
+  "GET / on CardServlet" should {
+    "return status 200" in {
       get("/") {
-        status should be (200)
+        status must_== 200
       }
+
     }
   }
+
 }
