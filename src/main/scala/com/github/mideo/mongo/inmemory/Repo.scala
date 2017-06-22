@@ -7,7 +7,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 
-trait InMemoryRepo[A] extends FieldValueGetter[A]{
+trait InMemoryRepo[A] extends FieldValueGetter[A] {
   protected val InMemoryCollection: ArrayBuffer[A] = ArrayBuffer[A]()
 }
 
@@ -30,7 +30,7 @@ trait Read[A]
     InMemoryCollection.toList
   }
 
-  override def read(field:String, value: String): Future[List[A]] = {
+  override def read(field: String, value: String): Future[List[A]] = {
     Future {
       (InMemoryCollection filter { (a: A) => {
         getFieldValue(field, a).equals(value)
@@ -41,11 +41,11 @@ trait Read[A]
 }
 
 
-trait Update[A ]
+trait Update[A]
   extends InMemoryRepo[A]
     with OpUpdate[A] {
 
-  override def update(field:String, value:String, a: A): Future[WriteResult] = {
+  override def update(field: String, value: String, a: A): Future[WriteResult] = {
     val temp = InMemoryCollection filter { (a: A) => !getFieldValue(field, a).equals(value) }
 
     if (InMemoryCollection.size > temp.size) {
@@ -62,12 +62,12 @@ trait Update[A ]
 }
 
 
-trait Delete[A ]
+trait Delete[A]
   extends InMemoryRepo[A]
     with OpDelete[A] {
-  override def delete(field:String, value: String): Future[WriteResult] = {
+  override def delete(field: String, value: String): Future[WriteResult] = {
     val temp = InMemoryCollection filter { (a: A) =>
-          getFieldValue(field, a).equals(value)
+      getFieldValue(field, a).equals(value)
     }
 
     if (temp.isEmpty) {
@@ -85,7 +85,7 @@ trait Delete[A ]
 }
 
 
-trait Crud[A ]
+trait Crud[A]
   extends Create[A]
     with Read[A]
     with Update[A]

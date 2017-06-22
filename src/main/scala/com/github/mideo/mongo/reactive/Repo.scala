@@ -17,6 +17,7 @@ import reactivemongo.bson.{BSONDocumentReader, BSONDocumentWriter}
 trait ReactiveRepo[A] extends FieldValueGetter[A] {
 
   implicit def Writer: BSONDocumentWriter[A]
+
   implicit def Reader: BSONDocumentReader[A]
 
   val reactiveMongo: ReactiveMongoApi
