@@ -6,11 +6,7 @@ jdk:
 scala:
   - 2.11.7
 
-script: cd mongo-kit && sbt clean test package publishLocal publishM2
-
-after_success:
-  - cd example-playframework && sbt clean test
-  - cd example-scalatra && ./sbt clean test
+script: cd mongo-kit && sbt clean test package publishLocal publishM2 && cd ../example-playframework && sbt clean test && cd ../example-scalatra && ./sbt clean test
 
 
 notifications:
