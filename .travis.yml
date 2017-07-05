@@ -6,15 +6,11 @@ jdk:
 scala:
   - 2.11.7
 
-env:
-  - MONGOKIT=mongo-kit
-  - PLAY_EXAMPLE=example-playframework
-  - SCALATRA_EXAMPLE=example-scalatra
+script: cd mongo-kit && sbt clean test package publishLocal publishM2
 
-script:
-  - cd $MONGOKIT && sbt clean test package publishLocal publishM2
-  - cd ../$PLAY_EXAMPLE && sbt clean test
-  - cd $SCALATRA_EXAMPLE && ./sbt clean test
+after_success:
+  - cd example-playframework && sbt clean test
+  - cd example-scalatra && ./sbt clean test
 
 
 notifications:
