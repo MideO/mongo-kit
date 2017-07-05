@@ -7,7 +7,15 @@ scala:
   - 2.11.7
 
 env:
-  - TEST_DIR=mongo-kit
+  - MONGOKIT=mongo-kit
+  - PLAY_EXAMPLE=example-playframework
+  - SCALATRA_EXAMPLE=example-scalatra
+
+script:
+  - cd $MONGOKIT && sbt clean test package publishLocal publishM2
+  - cd ../$PLAY_EXAMPLE && sbt clean test
+  - cd $SCALATRA_EXAMPLE && ./sbt clean test
+
 
 notifications:
   email:
