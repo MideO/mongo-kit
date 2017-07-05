@@ -31,6 +31,7 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
   cache , ws , specs2 % Test,
+  "com.google.inject" % "guice" % "3.0",
   "org.reactivemongo" % "play2-reactivemongo_2.11" % "0.12.3",
   "org.apache.httpcomponents" % "httpcore" % "4.4.4",
   "org.apache.httpcomponents" % "httpclient" % "4.5.2",

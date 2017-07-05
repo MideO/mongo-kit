@@ -10,7 +10,7 @@ Scala 2.11.7
 Simple API abstraction to quick integration of mongodb CRUD operations.
 
 ### Usage
- * example-playframework
+ * example-playframework [2.5.9]
   
 ```scala
 import com.github.mideo.mongo.reactive.{Crud => ReactiveCrud}]

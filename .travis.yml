@@ -6,6 +6,9 @@ jdk:
 scala:
   - 2.11.7
 
+env:
+  - TEST_DIR=mongo-kit
+
 notifications:
   email:
     recipients:

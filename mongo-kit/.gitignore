@@ -1,11 +1,11 @@
 logs
 project/project
-project/target
 target
 tmp
-.history
 dist
-.idea
+*.ipr
+*.iws
+/.idea
 /*.iml
 /out
 /.idea_modules
@@ -13,5 +13,7 @@ dist
 /.project
 /RUNNING_PID
 /.settings
+.DS_Store
+Supprimerait .gitignore
+Supprimerait project/
 
-    
