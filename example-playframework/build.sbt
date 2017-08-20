@@ -35,7 +35,7 @@ libraryDependencies ++= Seq(
   "org.reactivemongo" % "play2-reactivemongo_2.11" % "0.12.3",
   "org.apache.httpcomponents" % "httpcore" % "4.4.4",
   "org.apache.httpcomponents" % "httpclient" % "4.5.2",
-  "com.github.mideo" % "mongo-kit_2.11" % "0.0.1-SNAPSHOT"
+  "com.github.mideo" % "mongo-kit_2.11" % "0.0.2-SNAPSHOT"
 )
 
 javaOptions in Test += "-Dconfig.file=conf/test.conf"

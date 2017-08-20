@@ -25,7 +25,7 @@ libraryDependencies ++= Seq(
   "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided",
   "com.typesafe" % "config" % "1.3.0",
   "com.google.inject" % "guice" % "3.0",
-  "com.github.mideo" % "mongo-kit_2.11" % "0.0.1-SNAPSHOT"
+  "com.github.mideo" % "mongo-kit_2.11" % "0.0.2-SNAPSHOT"
 )
 
 enablePlugins(JettyPlugin)
