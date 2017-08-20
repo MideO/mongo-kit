@@ -1,7 +1,5 @@
 import _root_.sbtrelease.ReleasePlugin.autoImport.ReleaseStep
 import _root_.sbtrelease.ReleasePlugin.autoImport._
-import _root_.sbtrelease.ReleaseStateTransformations._
-import com.typesafe.sbt.SbtPgp._
 import com.typesafe.sbt.SbtPgp._
 import sbt._
 
