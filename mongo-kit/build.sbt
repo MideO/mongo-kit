@@ -1,3 +1,8 @@
+import _root_.sbtrelease.ReleasePlugin.autoImport.ReleaseStep
+import _root_.sbtrelease.ReleasePlugin.autoImport._
+import _root_.sbtrelease.ReleaseStateTransformations._
+import com.typesafe.sbt.SbtPgp._
+import com.typesafe.sbt.SbtPgp._
 import sbt._
 
 name := "mongo-kit"
@@ -8,7 +13,6 @@ organization := "com.github.mideo"
 
 scalaVersion := "2.11.7"
 
-useGpg := true
 
 lazy val `mongo-kit` = (project in file("."))
   .settings(
@@ -48,6 +52,18 @@ pomIncludeRepository := { _ => false }
 
 publishMavenStyle := true
 
+publishArtifact in Test := false
+
+val oss_user = if (sys.env.keySet.contains("OSS_USERNAME")) sys.env("OSS_USERNAME") else ""
+val oss_pass = if (sys.env.keySet.contains("OSS_PASSWORD")) sys.env("OSS_PASSWORD") else ""
+val gpg_pass = if (sys.env.keySet.contains("GPG_PASSWORD")) sys.env("GPG_PASSWORD").toCharArray else Array.emptyCharArray
+
+credentials += Credentials(
+  "Sonatype Nexus Repository Manager",
+  "oss.sonatype.org", oss_user, oss_pass)
+
+pgpPassphrase := Some(gpg_pass)
+
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
   if (isSnapshot.value)
@@ -74,4 +90,39 @@ developers := List(
     email = "mide.ojikutu@gmail.com",
     url = url("https://github.com/MideO")
   )
+)
+
+
+val tagName = Def.setting {
+  s"v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}"
+}
+val tagOrHash = Def.setting {
+  if (isSnapshot.value)
+    sys.process.Process("git rev-parse HEAD").lines_!.head
+  else
+    tagName.value
+}
+
+
+// Release
+import ReleaseTransformations._
+
+releaseVersionBump := sbtrelease.Version.Bump.Next
+
+releaseIgnoreUntrackedFiles := true
+
+releasePublishArtifactsAction := PgpKeys.publishSigned.value
+
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  publishArtifacts,
+  setNextVersion,
+  commitNextVersion,
+  pushChanges
 )
