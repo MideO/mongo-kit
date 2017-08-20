@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/MideO/mongo-kit.svg?branch=master)](https://travis-ci.org/MideO/mongo-kit)
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.mideo/mongo-kit/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.mideo%22%20a%3A%22mongo-kit%22)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.mideo/mongo-kit_2.11/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.mideo%22%20a%3A%22mongo-kit_2.11%22)
 
 ### Setup dependency
 Scala 2.11.7
