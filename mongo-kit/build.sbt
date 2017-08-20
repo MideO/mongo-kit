@@ -5,8 +5,6 @@ import sbt._
 
 name := "mongo-kit"
 
-version := "0.0.1-SNAPSHOT"
-
 organization := "com.github.mideo"
 
 scalaVersion := "2.11.7"
